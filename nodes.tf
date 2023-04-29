@@ -18,6 +18,21 @@ resource "aws_iam_role_policy_attachment" "nodes-AmazonEC2ContainerRegistryReadO
   role       = aws_iam_role.nodes.name
 }
 
+#I added this policy because my StatefulSet pod requesting PV was in pending mode due to this policy "nodes-Amazon_EBS_CSI_Driver" that
+# will allow eks-node-group to create PV was not added. Note eks comes with a dynamic storage class and therefore should
+#automatically provision as PV for a pod deployed with PVC.
+#adding this and associating it to the node group and also deploying the ebs driver shown below solved the issue.
+## Deploy EBS CSI Driver
+#kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
+# Verify ebs-csi pods running
+#kubectl get pods -n kube-system
+
+resource "aws_iam_role_policy_attachment" "nodes-Amazon_EBS_CSI_Driver" {
+  policy_arn = "arn:aws:iam::612500737416:policy/Amazon_EBS_CSI_Driver"
+  role       = aws_iam_role.nodes.name
+}
+
+
 resource "aws_eks_node_group" "private-nodes" {
   cluster_name    = aws_eks_cluster.demo.name
   node_group_name = "private-nodes"
