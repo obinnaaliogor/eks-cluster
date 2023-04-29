@@ -28,7 +28,7 @@ resource "aws_eip" "nat" {
 #4. Create NAT gateway
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.public[0].id
+  subnet_id     = aws_subnet.public[0].id #B/c we have 2 subnet yoy have to specify one to attach the eip
 
   tags = {
     Name = "nat"

@@ -1,0 +1,6 @@
+.idea/vcs.xml
+.terraform.lock.hcl
+.terraform.tfstate.lock.info
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
